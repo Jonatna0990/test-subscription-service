@@ -1,0 +1,19 @@
+# Binaries for programs and plugins
+*.exe
+*.bin
+
+# Build artifacts
+/build/
+
+# Dependency vendor directory (if used)
+/vendor/
+
+# IDE-specific files
+.vscode/
+.idea/
+*.iml
+
+# Test data and temporary files
+testdata/
+*.log
+*.tmp

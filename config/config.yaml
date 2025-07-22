@@ -1,0 +1,11 @@
+app:
+  env: "local"
+  migrationsPath: "migrations"
+
+postgres:
+  host: "localhost"
+  port: 5432
+  user: "postgres"
+  password: "example"
+  db_name: "postgres"
+  ssl_mode: "disable"
