@@ -1,32 +1,26 @@
 package app
 
 import (
-	"errors"
+	"github.com/Jonatna0990/test-subscription-service/internal/config"
 	"github.com/ilyakaznacheev/cleanenv"
 	"log"
 	"os"
 )
 
 // initConfig загружает конфигурацию приложения из файла, путь к которому
-// задаётся через переменную окружения CONFIG_PATH.
-func (a *App) initConfig() error {
-	configPath := os.Getenv("CONFIG_PATH")
-
+// задаётся через переменную окружения configPath.
+func (a *App) initConfig(configPath string) {
 	if configPath == "" {
-		log.Fatalf("CONFIG_PATH is not set")
-		return errors.New("CONFIG_PATH is not set")
+		log.Fatal("config is not set")
 	}
 
 	if _, err := os.Stat(configPath); os.IsNotExist(err) {
 		log.Fatalf("config file does not exist: %s", configPath)
-		return err
 	}
 
-	if err := cleanenv.ReadConfig(configPath, &a.config); err != nil {
+	a.config = &config.Config{}
+
+	if err := cleanenv.ReadConfig(configPath, a.config); err != nil {
 		log.Fatalf("cannot read config: %s", err)
-
-		return err
 	}
-
-	return nil
 }

@@ -15,9 +15,8 @@ const (
 func (a *App) initLogger() {
 	var log *slog.Logger
 
-	switch a.config.Env {
-	case envLocal:
-	case envDev:
+	switch a.config.App.Env {
+	case envLocal, envDev:
 		log = slog.New(
 			slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{Level: slog.LevelDebug}),
 		)

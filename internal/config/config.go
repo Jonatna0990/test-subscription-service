@@ -9,13 +9,14 @@ type Config struct {
 
 // App — конфигурация приложения
 type App struct {
-	Env            string `yaml:"env"`
-	MigrationsPath string `yaml:"migrationsPath"`
+	Env  string `yaml:"env"`
+	Name string `yaml:"name"`
 }
 
 // HTTPServer — конфигурация HTTP-сервера
 type HTTPServer struct {
-	Address string `yaml:"address"`
+	Host string `yaml:"host"`
+	Port int    `yaml:"port"`
 }
 
 // Postgres — конфигурация подключения к PostgreSQL
