@@ -2,6 +2,9 @@ app:
   env: "local"
   migrationsPath: "migrations"
 
+http_server:
+  address: "0.0.0.0:8082"
+
 postgres:
   host: "localhost"
   port: 5432
