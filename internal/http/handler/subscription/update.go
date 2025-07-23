@@ -9,6 +9,16 @@ import (
 	"github.com/jackc/pgx/v4"
 )
 
+// @Summary Обновить подписку
+// @Description Обновляет данные существующей подписки
+// @Tags Подписки
+// @Accept json
+// @Produce json
+// @Param data body dto.SubscriptionRequest true "Обновлённые данные подписки"
+// @Success 200 {string} string "Обновлено"
+// @Failure 400 {object} dto.ErrorResponse "Неверный запрос"
+// @Failure 500 {object} dto.ErrorResponse "Внутренняя ошибка сервера"
+// @Router /subscriptions [put]
 func (h *Handler) Update(c fiber.Ctx) error {
 
 	id := c.Params("id")

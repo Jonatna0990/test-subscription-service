@@ -7,12 +7,15 @@ import (
 	"github.com/jackc/pgx/v4"
 )
 
-// @Summary      Пинг
-// @Description  Возвращает pong
-// @Tags         health
-// @Produce      json
-// @Success      200  {object}  map[string]string
-// @Router       /ping [get]
+// @Summary Получить подписку по ID
+// @Description Возвращает подписку по её идентификатору
+// @Tags Подписки
+// @Produce json
+// @Param id path string true "ID подписки"
+// @Success 200 {object} dto.SubscriptionResponse "Найденная подписка"
+// @Failure 404 {object} dto.ErrorResponse "Не найдено"
+// @Failure 500 {object} dto.ErrorResponse "Внутренняя ошибка сервера"
+// @Router /subscriptions/{id} [get]
 func (h *Handler) GetByID(c fiber.Ctx) error {
 	id := c.Params("id")
 
