@@ -41,7 +41,7 @@ func (a *App) startHTTPServer() error {
 		return err
 	}
 
-	repo := subscriptions.NewRepository(a.logger, a.postgres)
+	repo := subscriptions.NewRepository(a.postgres.Pool, a.logger)
 	uc := usecase.New(repo)
 	h := handler.New(uc)
 

@@ -50,7 +50,7 @@ func (r *repo) CalculateTotal(ctx context.Context, filter *dto.GetSubscriptionFi
 	}
 
 	var totalCost int
-	err = r.postgres.Pool.QueryRow(ctx, query, args...).Scan(&totalCost)
+	err = r.db.QueryRow(ctx, query, args...).Scan(&totalCost)
 	if err != nil {
 		r.logger.Error("CalculateTotal query error: " + err.Error())
 		return dto.GetSubscriptionFilterListResponse{}, err

@@ -32,7 +32,7 @@ func (r *repo) Update(ctx context.Context, s *dto.SubscriptionRequest, id string
 		WHERE user_id = $5
 	`
 
-	_, err = r.postgres.Pool.Exec(ctx, query,
+	_, err = r.db.Exec(ctx, query,
 		s.ServiceName,
 		s.Price,
 		startDate,

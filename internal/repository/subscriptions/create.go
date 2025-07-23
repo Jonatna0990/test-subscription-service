@@ -33,7 +33,7 @@ func (r *repo) Create(ctx context.Context, s *dto.SubscriptionRequest) (string, 
 	query := `INSERT INTO subscriptions (service_name, price, user_id, start_date, end_date)
               VALUES ($1, $2, $3, $4, $5)`
 
-	_, err = r.postgres.Pool.Exec(
+	_, err = r.db.Exec(
 		ctx,
 		query,
 		s.ServiceName,

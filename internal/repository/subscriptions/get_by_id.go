@@ -19,7 +19,7 @@ func (r *repo) GetByID(ctx context.Context, id string) (*dto.SubscriptionRespons
 	var startDate *time.Time
 	var endDate *time.Time
 
-	row := r.postgres.Pool.QueryRow(ctx, query, id)
+	row := r.db.QueryRow(ctx, query, id)
 	err := row.Scan(
 		&sub.ServiceName,
 		&sub.Price,

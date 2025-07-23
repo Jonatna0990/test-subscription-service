@@ -10,7 +10,7 @@ import (
 func (r *repo) GetAll(ctx context.Context) ([]dto.SubscriptionResponse, error) {
 	// TODO: добавить лимит и смещение (пагинацию)
 	query := `SELECT service_name, price, user_id, start_date, end_date FROM subscriptions`
-	rows, err := r.postgres.Pool.Query(ctx, query)
+	rows, err := r.db.Query(ctx, query)
 	if err != nil {
 		r.logger.Error(err.Error())
 		return nil, err

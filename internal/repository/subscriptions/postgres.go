@@ -1,15 +1,23 @@
 package subscriptions
 
 import (
-	"github.com/Jonatna0990/test-subscription-service/pkg/postgres"
+	"context"
+	"github.com/jackc/pgconn"
+	"github.com/jackc/pgx/v4"
 	"log/slog"
 )
 
-type repo struct {
-	logger   *slog.Logger
-	postgres *postgres.Postgres
+type DB interface {
+	QueryRow(ctx context.Context, query string, args ...any) pgx.Row
+	Query(ctx context.Context, query string, args ...any) (pgx.Rows, error)
+	Exec(ctx context.Context, query string, args ...any) (pgconn.CommandTag, error)
 }
 
-func NewRepository(logger *slog.Logger, postgres *postgres.Postgres) Repository {
-	return &repo{logger: logger, postgres: postgres}
+type repo struct {
+	logger *slog.Logger
+	db     DB
+}
+
+func NewRepository(db DB, logger *slog.Logger) Repository {
+	return &repo{db: db, logger: logger}
 }

@@ -8,7 +8,7 @@ import (
 func (r *repo) Delete(ctx context.Context, id string) error {
 	query := `DELETE FROM subscriptions WHERE user_id = $1`
 
-	result, err := r.postgres.Pool.Exec(ctx, query, id)
+	result, err := r.db.Exec(ctx, query, id)
 	if err != nil {
 		r.logger.Error("failed to delete subscription: " + err.Error())
 		return err
