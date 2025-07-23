@@ -12,16 +12,15 @@ type SubscriptionRequest struct {
 }
 
 type GetSubscriptionFilterListRequest struct {
-	StartDate   string `json:"start_date" validate:"required"`
-	EndDate     string `json:"end_date" validate:"required"`
-	ID          string `json:"id"`
-	ServiceName string `json:"service_name"`
+	StartDate   string `query:"start_date" validate:"required"`
+	EndDate     string `query:"end_date" validate:"required"`
+	UserID      string `query:"user_id"`
+	ServiceName string `query:"service_name"`
 }
 
 // TODO
 // подходит для create/read/update/list - потом можно сделать для каждого request'a свою структуру
 type SubscriptionResponse struct {
-	ID          string `json:"id"`
 	ServiceName string `json:"service_name"`
 	Price       int    `json:"price"`
 	UserID      string `json:"user_id"`
@@ -30,7 +29,7 @@ type SubscriptionResponse struct {
 }
 
 type GetSubscriptionFilterListResponse struct {
-	TotalCost string     `json:"id"`
-	StartDate time.Time  `json:"start_date"`
+	TotalCost int        `json:"total_cost"`
+	StartDate *time.Time `json:"start_date"`
 	EndDate   *time.Time `json:"end_date"`
 }

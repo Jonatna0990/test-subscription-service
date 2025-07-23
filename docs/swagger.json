@@ -1,4 +1,7 @@
 {
+    "schemes": [
+        "http"
+    ],
     "swagger": "2.0",
     "info": {
         "description": "This is a sample swagger for subscription service API",
@@ -64,11 +67,17 @@
                     "200": {
                         "description": "Обновлено",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/dto.SuccessResponse"
                         }
                     },
                     "400": {
                         "description": "Неверный запрос",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Не найдена подписка",
                         "schema": {
                             "$ref": "#/definitions/dto.ErrorResponse"
                         }
@@ -108,7 +117,7 @@
                     "201": {
                         "description": "Создано",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/dto.SuccessResponse"
                         }
                     },
                     "400": {
@@ -117,7 +126,7 @@
                             "$ref": "#/definitions/dto.ErrorResponse"
                         }
                     },
-                    "500": {
+                    "502": {
                         "description": "Внутренняя ошибка сервера",
                         "schema": {
                             "$ref": "#/definitions/dto.ErrorResponse"
@@ -126,8 +135,8 @@
                 }
             }
         },
-        "/subscriptions/calculate-total": {
-            "post": {
+        "/subscriptions/summary": {
+            "get": {
                 "description": "Возвращает сумму всех подписок, соответствующих фильтру",
                 "consumes": [
                     "application/json"
@@ -198,6 +207,12 @@
                             "$ref": "#/definitions/dto.SubscriptionResponse"
                         }
                     },
+                    "400": {
+                        "description": "Неправильный uuid",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ErrorResponse"
+                        }
+                    },
                     "404": {
                         "description": "Не найдено",
                         "schema": {
@@ -231,7 +246,7 @@
                     "204": {
                         "description": "Удалено",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/dto.SuccessResponse"
                         }
                     },
                     "404": {
@@ -254,29 +269,35 @@
         "dto.ErrorResponse": {
             "type": "object",
             "properties": {
+                "fields": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                },
                 "message": {
                     "type": "string",
-                    "example": "ошибка запроса"
+                    "example": "request error"
                 }
             }
         },
         "dto.GetSubscriptionFilterListRequest": {
             "type": "object",
             "required": [
-                "end_date",
-                "start_date"
+                "endDate",
+                "startDate"
             ],
             "properties": {
-                "end_date": {
+                "endDate": {
                     "type": "string"
                 },
-                "id": {
+                "serviceName": {
                     "type": "string"
                 },
-                "service_name": {
+                "startDate": {
                     "type": "string"
                 },
-                "start_date": {
+                "userID": {
                     "type": "string"
                 }
             }
@@ -287,11 +308,11 @@
                 "end_date": {
                     "type": "string"
                 },
-                "id": {
-                    "type": "string"
-                },
                 "start_date": {
                     "type": "string"
+                },
+                "total_cost": {
+                    "type": "integer"
                 }
             }
         },
@@ -323,9 +344,6 @@
                 "end_date": {
                     "type": "string"
                 },
-                "id": {
-                    "type": "string"
-                },
                 "price": {
                     "type": "integer"
                 },
@@ -337,6 +355,15 @@
                 },
                 "user_id": {
                     "type": "string"
+                }
+            }
+        },
+        "dto.SuccessResponse": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string",
+                    "example": "request success"
                 }
             }
         }

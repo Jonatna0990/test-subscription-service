@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"github.com/Jonatna0990/test-subscription-service/internal/dto"
 	"github.com/gofiber/fiber/v3"
 )
 
@@ -14,7 +15,9 @@ import (
 func (h *Handler) GetAll(c fiber.Ctx) error {
 	result, err := h.usecase.GetAll(c.RequestCtx())
 	if err != nil {
-		return fiber.NewError(fiber.StatusInternalServerError, err.Error())
+		return c.Status(fiber.StatusInternalServerError).JSON(dto.ErrorResponse{
+			Message: "internal server error",
+		})
 	}
 
 	return c.Status(fiber.StatusCreated).JSON(result)

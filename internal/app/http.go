@@ -4,11 +4,12 @@ import (
 	"errors"
 	"fmt"
 	"github.com/Flussen/swagger-fiber-v3"
-	handler "github.com/Jonatna0990/test-subscription-service/internal/http/handler/subscription"
-	"github.com/Jonatna0990/test-subscription-service/internal/repository/subscription"
+	handler "github.com/Jonatna0990/test-subscription-service/internal/http/handler/subscriptions"
+	"github.com/Jonatna0990/test-subscription-service/internal/repository/subscriptions"
 	"github.com/Jonatna0990/test-subscription-service/internal/usecase"
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v3"
+	"github.com/gofiber/fiber/v3/middleware/cors"
 	"log"
 )
 
@@ -40,11 +41,12 @@ func (a *App) startHTTPServer() error {
 		return err
 	}
 
-	repo := subscription.NewRepository(a.logger, a.postgres)
+	repo := subscriptions.NewRepository(a.logger, a.postgres)
 	uc := usecase.New(repo)
 	h := handler.New(uc)
 
 	addr := fmt.Sprintf("%s:%d", a.config.HTTPServer.Host, a.config.HTTPServer.Port)
+	a.server.Use(cors.New())
 	h.RegisterRoutes(a.server)
 	a.server.Get("/swagger/*", swagger.HandlerDefault)
 	return a.server.Listen(addr)
@@ -55,7 +57,7 @@ func (a *App) initHttpServer() {
 	a.server = fiber.New(fiber.Config{
 		// TODO вынести в параметры конфигурации
 		CaseSensitive:   true,
-		StrictRouting:   true,
+		StrictRouting:   false,
 		AppName:         a.config.App.Name,
 		StructValidator: &structValidator{validate: validator.New()},
 	})

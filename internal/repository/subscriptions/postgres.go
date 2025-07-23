@@ -1,4 +1,4 @@
-package subscription
+package subscriptions
 
 import (
 	"github.com/Jonatna0990/test-subscription-service/pkg/postgres"

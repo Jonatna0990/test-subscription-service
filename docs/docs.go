@@ -70,11 +70,17 @@ const docTemplate = `{
                     "200": {
                         "description": "Обновлено",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/dto.SuccessResponse"
                         }
                     },
                     "400": {
                         "description": "Неверный запрос",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Не найдена подписка",
                         "schema": {
                             "$ref": "#/definitions/dto.ErrorResponse"
                         }
@@ -114,7 +120,7 @@ const docTemplate = `{
                     "201": {
                         "description": "Создано",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/dto.SuccessResponse"
                         }
                     },
                     "400": {
@@ -123,7 +129,7 @@ const docTemplate = `{
                             "$ref": "#/definitions/dto.ErrorResponse"
                         }
                     },
-                    "500": {
+                    "502": {
                         "description": "Внутренняя ошибка сервера",
                         "schema": {
                             "$ref": "#/definitions/dto.ErrorResponse"
@@ -132,8 +138,8 @@ const docTemplate = `{
                 }
             }
         },
-        "/subscriptions/calculate-total": {
-            "post": {
+        "/subscriptions/summary": {
+            "get": {
                 "description": "Возвращает сумму всех подписок, соответствующих фильтру",
                 "consumes": [
                     "application/json"
@@ -204,6 +210,12 @@ const docTemplate = `{
                             "$ref": "#/definitions/dto.SubscriptionResponse"
                         }
                     },
+                    "400": {
+                        "description": "Неправильный uuid",
+                        "schema": {
+                            "$ref": "#/definitions/dto.ErrorResponse"
+                        }
+                    },
                     "404": {
                         "description": "Не найдено",
                         "schema": {
@@ -237,7 +249,7 @@ const docTemplate = `{
                     "204": {
                         "description": "Удалено",
                         "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/dto.SuccessResponse"
                         }
                     },
                     "404": {
@@ -260,29 +272,35 @@ const docTemplate = `{
         "dto.ErrorResponse": {
             "type": "object",
             "properties": {
+                "fields": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                },
                 "message": {
                     "type": "string",
-                    "example": "ошибка запроса"
+                    "example": "request error"
                 }
             }
         },
         "dto.GetSubscriptionFilterListRequest": {
             "type": "object",
             "required": [
-                "end_date",
-                "start_date"
+                "endDate",
+                "startDate"
             ],
             "properties": {
-                "end_date": {
+                "endDate": {
                     "type": "string"
                 },
-                "id": {
+                "serviceName": {
                     "type": "string"
                 },
-                "service_name": {
+                "startDate": {
                     "type": "string"
                 },
-                "start_date": {
+                "userID": {
                     "type": "string"
                 }
             }
@@ -293,11 +311,11 @@ const docTemplate = `{
                 "end_date": {
                     "type": "string"
                 },
-                "id": {
-                    "type": "string"
-                },
                 "start_date": {
                     "type": "string"
+                },
+                "total_cost": {
+                    "type": "integer"
                 }
             }
         },
@@ -329,9 +347,6 @@ const docTemplate = `{
                 "end_date": {
                     "type": "string"
                 },
-                "id": {
-                    "type": "string"
-                },
                 "price": {
                     "type": "integer"
                 },
@@ -345,6 +360,15 @@ const docTemplate = `{
                     "type": "string"
                 }
             }
+        },
+        "dto.SuccessResponse": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string",
+                    "example": "request success"
+                }
+            }
         }
     }
 }`
@@ -354,7 +378,7 @@ var SwaggerInfo = &swag.Spec{
 	Version:          "1.0",
 	Host:             "localhost:3001",
 	BasePath:         "/",
-	Schemes:          []string{},
+	Schemes:          []string{"http"},
 	Title:            "Subscription Service API",
 	Description:      "This is a sample swagger for subscription service API",
 	InfoInstanceName: "swagger",

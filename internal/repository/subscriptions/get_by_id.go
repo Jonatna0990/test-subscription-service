@@ -1,4 +1,4 @@
-package subscription
+package subscriptions
 
 import (
 	"context"
@@ -10,9 +10,9 @@ import (
 
 func (r *repo) GetByID(ctx context.Context, id string) (*dto.SubscriptionResponse, error) {
 	query := `
-		SELECT id, service_name, price, user_id, start_date, end_date
+		SELECT service_name, price, user_id, start_date, end_date
 		FROM subscriptions
-		WHERE id = $1
+		WHERE user_id = $1
 	`
 
 	var sub dto.SubscriptionResponse
@@ -21,21 +21,23 @@ func (r *repo) GetByID(ctx context.Context, id string) (*dto.SubscriptionRespons
 
 	row := r.postgres.Pool.QueryRow(ctx, query, id)
 	err := row.Scan(
-		&sub.ID,
 		&sub.ServiceName,
 		&sub.Price,
 		&sub.UserID,
 		&startDate,
 		&endDate,
 	)
-
 	if err != nil {
-		r.logger.Error(err.Error())
+		r.logger.Error("get subscription by id error: " + err.Error())
 		return nil, fmt.Errorf("get subscription by id: %w", err)
 	}
 
-	sub.StartDate = utils.FormatMonthYear(*startDate)
-	sub.EndDate = utils.FormatMonthYear(*endDate)
+	if startDate != nil {
+		sub.StartDate = utils.FormatMonthYear(*startDate)
+	}
+	if endDate != nil {
+		sub.EndDate = utils.FormatMonthYear(*endDate)
+	}
 
 	return &sub, nil
 }

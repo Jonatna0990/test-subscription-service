@@ -2,32 +2,36 @@ basePath: /
 definitions:
   dto.ErrorResponse:
     properties:
+      fields:
+        additionalProperties:
+          type: string
+        type: object
       message:
-        example: ошибка запроса
+        example: request error
         type: string
     type: object
   dto.GetSubscriptionFilterListRequest:
     properties:
-      end_date:
+      endDate:
         type: string
-      id:
+      serviceName:
         type: string
-      service_name:
+      startDate:
         type: string
-      start_date:
+      userID:
         type: string
     required:
-    - end_date
-    - start_date
+    - endDate
+    - startDate
     type: object
   dto.GetSubscriptionFilterListResponse:
     properties:
       end_date:
         type: string
-      id:
-        type: string
       start_date:
         type: string
+      total_cost:
+        type: integer
     type: object
   dto.SubscriptionRequest:
     properties:
@@ -48,8 +52,6 @@ definitions:
     properties:
       end_date:
         type: string
-      id:
-        type: string
       price:
         type: integer
       service_name:
@@ -57,6 +59,12 @@ definitions:
       start_date:
         type: string
       user_id:
+        type: string
+    type: object
+  dto.SuccessResponse:
+    properties:
+      message:
+        example: request success
         type: string
     type: object
 host: localhost:3001
@@ -102,12 +110,12 @@ paths:
         "201":
           description: Создано
           schema:
-            type: string
+            $ref: '#/definitions/dto.SuccessResponse'
         "400":
           description: Неверный запрос
           schema:
             $ref: '#/definitions/dto.ErrorResponse'
-        "500":
+        "502":
           description: Внутренняя ошибка сервера
           schema:
             $ref: '#/definitions/dto.ErrorResponse'
@@ -131,9 +139,13 @@ paths:
         "200":
           description: Обновлено
           schema:
-            type: string
+            $ref: '#/definitions/dto.SuccessResponse'
         "400":
           description: Неверный запрос
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
+        "404":
+          description: Не найдена подписка
           schema:
             $ref: '#/definitions/dto.ErrorResponse'
         "500":
@@ -156,7 +168,7 @@ paths:
         "204":
           description: Удалено
           schema:
-            type: string
+            $ref: '#/definitions/dto.SuccessResponse'
         "404":
           description: Не найдено
           schema:
@@ -183,6 +195,10 @@ paths:
           description: Найденная подписка
           schema:
             $ref: '#/definitions/dto.SubscriptionResponse'
+        "400":
+          description: Неправильный uuid
+          schema:
+            $ref: '#/definitions/dto.ErrorResponse'
         "404":
           description: Не найдено
           schema:
@@ -194,8 +210,8 @@ paths:
       summary: Получить подписку по ID
       tags:
       - Подписки
-  /subscriptions/calculate-total:
-    post:
+  /subscriptions/summary:
+    get:
       consumes:
       - application/json
       description: Возвращает сумму всех подписок, соответствующих фильтру
@@ -224,4 +240,6 @@ paths:
       summary: Подсчитать сумму подписок
       tags:
       - Подписки
+schemes:
+- http
 swagger: "2.0"

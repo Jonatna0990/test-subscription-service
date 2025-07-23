@@ -2,6 +2,7 @@ package handler
 
 import (
 	"errors"
+	"github.com/Jonatna0990/test-subscription-service/internal/dto"
 	"github.com/gofiber/fiber/v3"
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v4"
@@ -13,22 +14,33 @@ import (
 // @Produce json
 // @Param id path string true "ID подписки"
 // @Success 200 {object} dto.SubscriptionResponse "Найденная подписка"
+// @Failure 400 {object} dto.ErrorResponse "Неправильный uuid"
 // @Failure 404 {object} dto.ErrorResponse "Не найдено"
 // @Failure 500 {object} dto.ErrorResponse "Внутренняя ошибка сервера"
 // @Router /subscriptions/{id} [get]
 func (h *Handler) GetByID(c fiber.Ctx) error {
 	id := c.Params("id")
 
+	// Валидация UUID
 	if _, err := uuid.Parse(id); err != nil {
-		return fiber.NewError(fiber.StatusBadRequest, "invalid UUID format")
+		return c.Status(fiber.StatusBadRequest).JSON(dto.ErrorResponse{
+			Message: "invalid UUID format",
+		})
 	}
 
+	// Получаем результат из usecase
 	result, err := h.usecase.GetByID(c.RequestCtx(), id)
 	if err != nil {
-		if errors.Is(err, pgx.ErrNoRows) {
-			return fiber.NewError(fiber.StatusNotFound, "subscription not found")
+		switch {
+		case errors.Is(err, pgx.ErrNoRows):
+			return c.Status(fiber.StatusNotFound).JSON(dto.ErrorResponse{
+				Message: "subscription not found",
+			})
+		default:
+			return c.Status(fiber.StatusInternalServerError).JSON(dto.ErrorResponse{
+				Message: "internal server error",
+			})
 		}
-		return fiber.NewError(fiber.StatusInternalServerError, "failed to get subscription")
 	}
 
 	return c.Status(fiber.StatusOK).JSON(result)

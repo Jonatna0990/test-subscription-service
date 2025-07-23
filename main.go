@@ -27,6 +27,7 @@ func initApp() {
 // @description This is a sample swagger for subscription service API
 // @host localhost:3001
 // @BasePath /
+// @schemes         http
 func main() {
 	rootCmd := &cobra.Command{
 		Use:   "main service",
