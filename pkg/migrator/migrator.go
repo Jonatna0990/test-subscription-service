@@ -2,7 +2,6 @@ package migrator
 
 import (
 	"errors"
-	"flag"
 	"fmt"
 	"github.com/golang-migrate/migrate/v4"
 	_ "github.com/golang-migrate/migrate/v4/database/postgres"
@@ -68,27 +67,15 @@ func (r *Migrator) run(direction string) error {
 }
 
 // RunMigrate — точка входа. Запускает миграции на основе флагов
-func RunMigrate() {
-	// Определяем флаги
-	mode := flag.String("mode", "", "migration mode: up or down")
-	dbHost := flag.String("db-host", "", "PostgreSQL host")
-	dbPort := flag.Int("db-port", 5432, "PostgreSQL port")
-	dbUser := flag.String("db-user", "", "PostgreSQL user")
-	dbPass := flag.String("db-pass", "", "PostgreSQL password")
-	dbName := flag.String("db-name", "", "PostgreSQL database name")
-	sslMode := flag.String("ssl-mode", "disable", "SSL mode")
-	migrationsPath := flag.String("migrations-path", "", "path to migrations")
-	migrationsTable := flag.String("migrations-table", "schema_migrations", "migrations table name")
-
-	flag.Parse()
-
+func RunMigrate(dbHost string, dbPort int, dbUser, dbPass, dbName, sslMode, mode, migrationsPath, migrationsTable string) error {
+	// Проверка обязательных флагов
 	required := map[string]string{
-		"mode":            *mode,
-		"db-host":         *dbHost,
-		"db-user":         *dbUser,
-		"db-pass":         *dbPass,
-		"db-name":         *dbName,
-		"migrations-path": *migrationsPath,
+		"mode":            mode,
+		"db-host":         dbHost,
+		"db-user":         dbUser,
+		"db-pass":         dbPass,
+		"db-name":         dbName,
+		"migrations-path": migrationsPath,
 	}
 	var missing []string
 	for name, value := range required {
@@ -97,23 +84,24 @@ func RunMigrate() {
 		}
 	}
 	if len(missing) > 0 {
-		log.Fatalf("❌ Missing required flags: %v", missing)
+		return fmt.Errorf("missing required flags: %v", missing)
 	}
 
 	migrator := Migrator{
-		Host:            *dbHost,
-		Port:            *dbPort,
-		User:            *dbUser,
-		Password:        *dbPass,
-		DBName:          *dbName,
-		SSLMode:         *sslMode,
-		MigrationsPath:  *migrationsPath,
-		MigrationsTable: *migrationsTable,
+		Host:            dbHost,
+		Port:            dbPort,
+		User:            dbUser,
+		Password:        dbPass,
+		DBName:          dbName,
+		SSLMode:         sslMode,
+		MigrationsPath:  migrationsPath,
+		MigrationsTable: migrationsTable,
 	}
 
-	if err := migrator.run(*mode); err != nil {
-		log.Fatalf("❌ Migration failed: %v", err)
+	if err := migrator.run(mode); err != nil {
+		return fmt.Errorf("migration failed: %w", err)
 	}
 
 	log.Println("✅ Migration completed successfully")
+	return nil
 }

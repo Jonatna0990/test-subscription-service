@@ -23,6 +23,12 @@ func (h *Handler) Create(c fiber.Ctx) error {
 	req := new(dto.SubscriptionRequest)
 	// TODO можно улучшить валидацию и возвращаемые ошибки
 
+	if len(c.Body()) == 0 {
+		return c.Status(fiber.StatusBadRequest).JSON(dto.ErrorResponse{
+			Message: "request body cannot be empty",
+		})
+	}
+
 	if err := c.Bind().JSON(req); err != nil {
 		if validationErrors, ok := err.(validator.ValidationErrors); ok {
 			errorsMap := make(map[string]string)

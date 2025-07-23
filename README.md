@@ -3,40 +3,50 @@
 ## Структура проекта
 
 ```markdown
-└── cmd
-│   └── app             # Запуск сервера
+├── cmd
+│   ├── http            # Запуск сервера
 │   └── migrator        # Запуск миграций
-└── config              # Файл конфигурации(заменить на свой)
-└── docker              # Запуск и работа сервиса
+├── config              # Файл конфигурации(заменить на свой)
 ├── internal            # Доменная логика
-│   └── app             # Главное приложение
-│   └── config          # Конфигурация и загрузка
-│   └── domain          # Домены приложения
-│   └── http            # Хэндлеры и middleware для http
-│   └── lib             # Конфигурация и загрузка
-└── services        # Слой сервисов
-│   └── storage         # Работа с БД
-├── tests               # Функциональные тесты
+│   ├── app             # Главное приложение
+│   ├── config          # Конфигурация и загрузка
+│   ├── dto             # Модели валидации запросов и отправки ответов
+│   ├── entity          # Домены приложения
+│   ├── http            # Хэндлеры и middleware для http
+│   ├── repository      # Слой репозитория
+│   └── usecase         # Слой кейсов
+├── migrations          # Миграции
+├── pkg                 # Вспомогательные пакеты
+└── tests               # Тесты
        
 ```
-## Настройка окружения
+## Настройки окружения
 
-Конфигурации лежат по адресу `/config/config.yaml`:
+Конфигурации лежат по адресу `/config/config.yaml`: (configd.yaml для докера)
 
-## Команда запуска приложения
+### Команда запуска приложения
 ```
 go run . http --config=...config\local.yaml
 ```
 
-## Команда миграции
+### Команда миграции
 ```
 go run .\cmd\migrator\main.go --db-host=localhost --db-name=postgres --mode=down --db-user=postgres --db-pass=example --migrations-path=...config/migrations
 ```
+### Приложение
+```
+http://localhost:3001
+```
 
-## Proto файлы брать из проекта https://github.com/Jonatna0990/protos
+### Swagger
+```
+http://localhost:3001/swagger/index.html
+```
 
 ## Необходимо доделать
-1. add token fail validation cases
-2. удалена работа с RabbitMQ, перейти на Kafka
+1. Добавить тесты
+2. DTO
+3. Добавить сервисы
+4. Мигратор
 
 

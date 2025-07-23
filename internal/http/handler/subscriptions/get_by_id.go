@@ -21,14 +21,12 @@ import (
 func (h *Handler) GetByID(c fiber.Ctx) error {
 	id := c.Params("id")
 
-	// Валидация UUID
 	if _, err := uuid.Parse(id); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(dto.ErrorResponse{
 			Message: "invalid UUID format",
 		})
 	}
 
-	// Получаем результат из usecase
 	result, err := h.usecase.GetByID(c.RequestCtx(), id)
 	if err != nil {
 		switch {

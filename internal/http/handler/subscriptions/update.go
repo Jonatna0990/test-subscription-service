@@ -31,7 +31,12 @@ func (h *Handler) Update(c fiber.Ctx) error {
 		})
 	}
 
-	// Проверка существования записи
+	if len(c.Body()) == 0 {
+		return c.Status(fiber.StatusBadRequest).JSON(dto.ErrorResponse{
+			Message: "request body cannot be empty",
+		})
+	}
+
 	_, err := h.usecase.GetByID(c.RequestCtx(), id)
 	if err != nil {
 		switch {
@@ -46,7 +51,6 @@ func (h *Handler) Update(c fiber.Ctx) error {
 		}
 	}
 
-	// Чтение и валидация запроса
 	req := new(dto.SubscriptionRequest)
 	if err := c.Bind().JSON(req); err != nil {
 		if validationErrors, ok := err.(validator.ValidationErrors); ok {
@@ -64,7 +68,6 @@ func (h *Handler) Update(c fiber.Ctx) error {
 		})
 	}
 
-	// Обновление
 	err = h.usecase.Update(c.RequestCtx(), req, id)
 	if err != nil {
 		var status int

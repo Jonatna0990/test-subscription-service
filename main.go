@@ -1,9 +1,9 @@
 package main
 
 import (
-	"github.com/Jonatna0990/test-subscription-service/cmd/app"
+	"github.com/Jonatna0990/test-subscription-service/cmd/http"
+	"github.com/Jonatna0990/test-subscription-service/cmd/migrator"
 	_ "github.com/Jonatna0990/test-subscription-service/docs"
-	"github.com/Jonatna0990/test-subscription-service/internal/app"
 	"github.com/spf13/cobra"
 	"log"
 	"os"
@@ -12,15 +12,6 @@ import (
 )
 
 var configFilePath string
-
-func initApp() {
-	a, err := app.NewApp(configFilePath)
-	if err != nil {
-		log.Fatal("Fail to create app: ", err)
-	}
-
-	app.SetGlobalApp(a)
-}
 
 // @title Subscription Service API
 // @version 1.0
@@ -34,12 +25,9 @@ func main() {
 		Short: "Main entry-point command for the application",
 	}
 
-	rootCmd.PersistentFlags().StringVar(&configFilePath, "config", "", "config file path")
-
-	cobra.OnInitialize(initApp)
-
 	rootCmd.AddCommand(
-		cmd.RunHTTP(),
+		http.RunHTTP(),
+		migrator.RunMigrate(),
 	)
 
 	if err := rootCmd.Execute(); err != nil {

@@ -10,6 +10,7 @@ import (
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v3"
 	"github.com/gofiber/fiber/v3/middleware/cors"
+	"github.com/gofiber/fiber/v3/middleware/logger"
 	"log"
 )
 
@@ -47,6 +48,7 @@ func (a *App) startHTTPServer() error {
 
 	addr := fmt.Sprintf("%s:%d", a.config.HTTPServer.Host, a.config.HTTPServer.Port)
 	a.server.Use(cors.New())
+	a.server.Use(logger.New())
 	h.RegisterRoutes(a.server)
 	a.server.Get("/swagger/*", swagger.HandlerDefault)
 	return a.server.Listen(addr)
