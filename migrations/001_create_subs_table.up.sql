@@ -7,6 +7,5 @@ CREATE TABLE subscriptions (
                                user_id UUID NOT NULL,
                                start_date DATE NOT NULL,
                                end_date DATE,
-                               created_at TIMESTAMP DEFAULT now(),
-                               updated_at TIMESTAMP DEFAULT now()
+                               created_at TIMESTAMP DEFAULT now()
 );

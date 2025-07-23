@@ -2,9 +2,13 @@ package main
 
 import (
 	"github.com/Jonatna0990/test-subscription-service/cmd/app"
+	_ "github.com/Jonatna0990/test-subscription-service/docs"
 	"github.com/Jonatna0990/test-subscription-service/internal/app"
 	"github.com/spf13/cobra"
 	"log"
+	"os"
+	"os/signal"
+	"syscall"
 )
 
 var configFilePath string
@@ -18,15 +22,10 @@ func initApp() {
 	app.SetGlobalApp(a)
 }
 
-// @title Auth Service API
+// @title Subscription Service API
 // @version 1.0
-// @description This is a sample swagger for Auth service API
-// @termsOfService http://swagger.io/terms/
-// @contact.name API Support
-// @contact.email fiber@swagger.io
-// @license.name Apache 2.0
-// @license.url http://www.apache.org/licenses/LICENSE-2.0.html
-// @host localhost:3000
+// @description This is a sample swagger for subscription service API
+// @host localhost:3001
 // @BasePath /
 func main() {
 	rootCmd := &cobra.Command{
@@ -47,4 +46,9 @@ func main() {
 
 		return
 	}
+
+	stop := make(chan os.Signal, 1)
+	signal.Notify(stop, syscall.SIGTERM, syscall.SIGINT)
+
+	<-stop
 }

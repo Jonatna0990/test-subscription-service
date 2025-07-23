@@ -23,10 +23,20 @@
 
 Конфигурации лежат по адресу `/config/config.yaml`:
 
-## Генерация grpc файлов - через protoc
+## Команда запуска приложения
+```
+go run . http --config=...config\local.yaml
+```
+
+## Команда миграции
+```
+go run .\cmd\migrator\main.go --db-host=localhost --db-name=postgres --mode=down --db-user=postgres --db-pass=example --migrations-path=...config/migrations
+```
 
 ## Proto файлы брать из проекта https://github.com/Jonatna0990/protos
 
 ## Необходимо доделать
 1. add token fail validation cases
 2. удалена работа с RabbitMQ, перейти на Kafka
+
+

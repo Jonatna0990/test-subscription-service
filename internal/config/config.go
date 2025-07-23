@@ -1,10 +1,12 @@
 package config
 
+import "github.com/Jonatna0990/test-subscription-service/pkg/postgres"
+
 // Config — основная структура конфигурации приложения
 type Config struct {
-	App        App        `yaml:"app"`
-	HTTPServer HTTPServer `yaml:"http_server"`
-	Postgres   Postgres   `yaml:"postgres"`
+	App        App             `yaml:"app"`
+	HTTPServer HTTPServer      `yaml:"http_server"`
+	Postgres   postgres.Config `yaml:"postgres"`
 }
 
 // App — конфигурация приложения
@@ -17,14 +19,4 @@ type App struct {
 type HTTPServer struct {
 	Host string `yaml:"host"`
 	Port int    `yaml:"port"`
-}
-
-// Postgres — конфигурация подключения к PostgreSQL
-type Postgres struct {
-	Host     string `yaml:"host"`
-	Port     int    `yaml:"port"`
-	User     string `yaml:"user"`
-	Password string `yaml:"password"`
-	DBName   string `yaml:"db_name"`
-	SSLMode  string `yaml:"ssl_mode"`
 }

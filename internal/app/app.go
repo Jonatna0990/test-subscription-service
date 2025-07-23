@@ -3,6 +3,7 @@ package app
 import (
 	"errors"
 	"github.com/Jonatna0990/test-subscription-service/internal/config"
+	"github.com/Jonatna0990/test-subscription-service/pkg/postgres"
 	"github.com/gofiber/fiber/v3"
 	"log/slog"
 )
@@ -10,9 +11,10 @@ import (
 var a *App
 
 type App struct {
-	config *config.Config
-	logger *slog.Logger
-	server *fiber.App
+	config   *config.Config
+	logger   *slog.Logger
+	server   *fiber.App
+	postgres *postgres.Postgres
 }
 
 // NewApp создаёт и инициализирует новый экземпляр приложения.
@@ -20,6 +22,7 @@ func NewApp(configPath string) (*App, error) {
 	app := &App{}
 	app.initConfig(configPath)
 	app.initLogger()
+	app.initPostgres()
 	app.initHttpServer()
 	app.logger.Info("App initialized")
 	return app, nil

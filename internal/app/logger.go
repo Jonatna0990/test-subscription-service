@@ -31,4 +31,5 @@ func (a *App) initLogger() {
 	}
 
 	a.logger = log
+	a.logger.Info("Logger initialized")
 }
